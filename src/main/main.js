@@ -467,8 +467,7 @@ ipcMain.handle("remote:openDrop", async () => {
 
     return { ok: true, url };
   } catch (e) {
-    console.error("Failed to open remote drop:", e);
-    return { ok: false, error: String(e) };
+    dialog.showErrorBox("Remote Drop Error", `Failed to open remote drop: ${e.message}`); // Dodana linia
   }
 });
 
@@ -553,7 +552,7 @@ function buildMenu() {
               if (!url) throw new Error("Remote URL not available yet.");
               await shell.openExternal(url);
             } catch (e) {
-              console.error("Failed to open remote drop from menu:", e);
+              dialog.showErrorBox("Remote Drop Error", `Failed to open remote drop from menu: ${e.message}`); // Dodana linia
               dialog.showErrorBox("Remote Drop Error", e.message);
             }
           }
