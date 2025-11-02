@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Help</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Help</h1>
+    <div id="help-content"></div>
+    <script>
+        async function loadHelp() {
+            const lang = await window.electron.getLang();
+            const content = await window.electron.getHelpContent(lang);
+            document.getElementById('help-content').innerHTML = content;
+        }
+        loadHelp();
+    </script>
+</body>
+</html>

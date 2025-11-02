@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<title>DJ Remote Drop</title>
+<style>
+  :root { --bg:#181c22; --accent:#1ed760; --accent-dark:#1db954; --shadow-color:rgba(30,215,96,0.4); --text:#fff; }
+  html,body{ height:100%; margin:0; padding:0; font-family:system-ui,-apple-system,sans-serif; background:var(--bg); }
+  .container{ display:flex; align-items:center; justify-content:center; height:100%; padding:20px; flex-direction: column; }
+  .btn{
+    -webkit-tap-highlight-color: transparent;
+    appearance:none; border:none; outline:none; cursor:pointer;
+    width:240px; height:240px; border-radius:999px;
+    background:radial-gradient(circle at 30% 30%, var(--accent), var(--accent-dark));
+    color:#001a0b; font-weight:900; font-size:38px; letter-spacing:.5px;
+    box-shadow:0 16px 40px var(--shadow-color), inset 0 4px 10px rgba(255,255,255,.25);
+    transition: transform .06s ease;
+    margin-bottom: 20px; /* Added margin for spacing */
+  }
+  .btn:active { transform: scale(.98); }
+  .hint{ margin-top:24px; color:#a2efc3; font-size:14px; text-align:center }
+  .url{ margin-top:14px; color:#cdebd9; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; text-align:center; word-break:break-all }
+  .presets {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+  }
+  .preset-btn {
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .preset-btn.active {
+    background: var(--accent);
+    color: #000;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div style="text-align:center">
+      <button class="btn" onclick="fire()">{{DROP_TEXT}}</button>
+      <div class="presets">
+        <button class="preset-btn" data-seconds="15">15s</button>
+        <button class="preset-btn" data-seconds="30">30s</button>
+        <button class="preset-btn" data-seconds="45">45s</button>
+        <button class="preset-btn" data-seconds="60">1m</button>
+      </div>
+      <div class="hint">📶 {{HINT_TEXT}}</div>
+      <div class="url">{{URL}}</div>
+    </div>
+  </div>
+<script>
+  async function fire(){
+    try{
+      const res = await fetch('/trigger', { method:'POST' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+    }catch(e){ alert('Trigger failed: '+e.message); }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.preset-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const seconds = parseInt(button.dataset.seconds, 10);
+        const preRollMs = (seconds === 15) ? 1500 : 3000;
+        try {
+          const res = await fetch('/preset', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ maxCapture: seconds, preRollMs: preRollMs })
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          
+          document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+          button.classList.add('active');
+
+        } catch (e) {
+          alert('Preset failed: ' + e.message);
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

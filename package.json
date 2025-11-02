@@ -1,0 +1,64 @@
+{
+  "name": "dj-midi-capture",
+  "version": "1.5.0",
+  "description": "DJ MIDI Capture - rolling buffer MIDI recorder",
+  "main": "src/main/main.js",
+  "author": {
+    "name": "Patryk Mozeluk",
+    "email": "patrykmozeluk@gmail.com"
+  },
+  "homepage": "https://example.com",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "electron-builder install-app-deps",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "build:mac": "electron-builder --mac --x64 --arm64",
+    "build:win-linux": "electron-builder --win --linux"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1",
+    "marked": "^12.0.2"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.djtools.midi-capture",
+    "productName": "DJ MIDI Capture",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "src/main/help_en.md",
+      "src/main/help_pl.md",
+      "src/renderer/help.html",
+      "package.json"
+    ],
+    "win": {
+      "icon": "build/midi-svgrepo-com.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "build/midi-svgrepo-com.png",
+      "category": "AudioVideo",
+      "maintainer": "Patryk Mozeluk <patrykmozeluk@gmail.com>"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/midi-svgrepo-com.png",
+      "category": "public.app-category.music"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

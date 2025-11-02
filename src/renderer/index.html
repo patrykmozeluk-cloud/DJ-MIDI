@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://api.qrserver.com;"
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DJ MIDI Capture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="preload">
+  <div class="container">
+    <div class="header">
+      <h1>🎛️ DJ MIDI Capture <span id="app-version"></span></h1>
+      <div class="muted">Rolling buffer MIDI recorder for DJs • Windows desktop (Electron)</div>
+    </div>
+
+    <div id="toast" class="toast">Saved!</div>
+
+    <!-- Status tiles -->
+    <div class="grid">
+      <div class="card"><h3>📡 MIDI Status</h3><div id="midi-status" class="value">⏳ Init…</div></div>
+      <div class="card"><h3>📊 Buffer Events</h3><div id="buffer-count" class="value">0</div></div>
+          <div class="card">
+            <h3>⏱️ Buffer Usage</h3>
+            <div class="progress-bar-container">
+              <div id="buffer-usage-bar" class="progress-bar-fill"></div>
+              <div id="buffer-usage-text" class="progress-bar-text">0%</div>
+            </div>
+          </div>
+      <div class="card"><h3>🎵 Captures</h3><div id="capture-count" class="value">0</div></div>
+    </div>
+
+    <!-- Devices list -->
+    <div class="card" style="margin-bottom:14px;">
+      <h3 style="display: flex; justify-content: space-between; align-items: center;">
+        <span>🎚️ Active Inputs</span>
+        <label for="toggle-virtual-ports" style="font-size: 12px; font-weight: normal; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+          Show Virtual
+          <input type="checkbox" id="toggle-virtual-ports" style="cursor: pointer;">
+        </label>
+      </h3>
+      <div id="midi-devices" class="muted">—</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <label id="session-name-label">Session <input id="session-name" type="text" placeholder="e.g., ClubNight" /></label>
+      <label id="track-tag-label">Track/Tag <input id="track-tag" type="text" placeholder="e.g., Intro" /></label>
+      <label>Pre-roll (ms) <input id="pre-roll" type="number" min="0" max="10000" step="100" value="3000" /></label>
+      <label>Max capture (s) <input id="max-cap" type="number" min="1" max="300" step="1" value="30" /></label>
+                <label>BPM <input id="bpm-input" type="number" min="40" max="300" step="1" value="120" /></label>
+                          <select id="bpm-presets" style="margin-left: 10px; padding: 5px;">
+                            <option value="">Choose tempo</option>
+                            <option value="90">90 BPM</option>
+                            <option value="120">120 BPM</option>
+                            <option value="128">128 BPM</option>
+                            <option value="140">140 BPM</option>
+                            <option value="174">174 BPM</option>
+                          </select>                <label><input id="forward-mode" type="checkbox" /> Forward mode</label>      <label><input id="ignore-rt" type="checkbox" checked /> Ignore realtime (F8—FF)</label>
+      <button id="btn-capture" class="btn btn-primary">▶️ Capture</button>
+      <button id="btn-clear" class="btn btn-secondary">🧹 Clear</button>
+    </div>
+
+    <!-- Save Format -->
+    <div class="controls">
+      <label>Save Format:</label>
+      <label><input type="radio" name="save-format" value="midi" id="save-midi" checked /> MIDI</label>
+      <label><input type="radio" name="save-format" value="json" id="save-json" /> JSON</label>
+      <label><input type="radio" name="save-format" value="both" id="save-both" /> Both</label>
+    </div>
+
+    <!-- Presets panel -->
+    <div class="panel">
+      <h3>Presets</h3>
+      <div class="controls preset-buttons" role="group" aria-label="capture-presets">
+        <button class="btn btn-secondary preset-btn" data-preroll="2000" data-maxcap="15">Preset: 15s</button>
+        <button class="btn btn-secondary preset-btn" data-preroll="3000" data-maxcap="30">Preset: 30s</button>
+        <button class="btn btn-secondary preset-btn" data-preroll="5000" data-maxcap="60">Preset: 60s</button>
+      </div>
+    </div>
+
+    <!-- Monitor -->
+    <div class="panel">
+      <h3>📡 Live MIDI Monitor</h3>
+      <div class="monitor-grid">
+        <div class="monitor-section">
+          <h4>🎹 Last MIDI Event</h4>
+          <div id="live-event" class="midi-box">Waiting for MIDI input…</div>
+        </div>
+        <div class="monitor-section">
+          <h4>🎯 Trigger Status</h4>
+          <div id="trigger-display" class="trigger-display">Ready</div>
+        </div>
+        <div class="monitor-section">
+          <h4>📊 Activity</h4>
+          <div id="led" class="led">⬤</div>
+        </div>
+      </div>
+      <div id="monitor-test-row" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top: 12px;">
+        <button id="btn-test-sound" class="btn btn-secondary">📈 Test Sound</button>
+        <button id="btn-test-trigger" class="btn btn-secondary">🧪 Test Trigger → Capture</button>
+        <button id="btn-monitor-clear" class="btn btn-secondary">🧹 Clear Monitor</button>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="panel">
+      <h3>📈 Live Timeline (Last 20 events)</h3>
+      <div id="timeline" class="timeline">
+        <div class="timeline-item">Press SPACE or use MIDI trigger to capture sequences…</div>
+      </div>
+    </div>
+
+    <!-- Remote Drop panel -->
+    <div class="panel">
+      <h3>📲 Remote Drop</h3>
+      <div class="save-row">
+        <div id="save-path" class="muted">💾 Saving to: (loading...)</div>
+        <div id="remote-url" class="muted">Drop URL: (starting...)</div>
+        <button id="btn-remote-drop" class="btn btn-primary" title="Remote trigger from phone">📲 Drop</button>
+        <button id="btn-copy-url" class="btn btn-secondary">📋 Copy URL</button>
+      </div>
+    </div>
+
+    <div class="muted" style="text-align:center; padding:10px;">
+      Controls: SPACE = Capture | T = Test Sound | Shift+T = Test Trigger | N = Set Track | C = Clear buffer
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
