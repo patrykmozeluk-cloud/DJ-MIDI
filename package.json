@@ -33,8 +33,8 @@
     },
     "files": [
       "src/**/*",
-      "src/main/help_en.md",
-      "src/main/help_pl.md",
+      "src/main/docs/README.en.md",
+      "src/main/docs/README.pl.md",
       "src/renderer/help.html",
       "package.json"
     ],
