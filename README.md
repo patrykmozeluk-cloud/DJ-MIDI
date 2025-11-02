@@ -191,6 +191,66 @@ Jeśli nie możesz połączyć się z serwerem Remote Drop z telefonu, nawet je�
 
 Po wykonaniu tych kroków, Zapora Windows Defender powinna zezwolić na połączenia z aplikacją DJ MIDI Capture, umożliwiając Twojemu telefonowi połączenie się z serwerem zdalnym.
 
+#### Konfiguracja Zapory Sieciowej (macOS)
+
+Na macOS domyślna zapora sieciowa (Firewall) jest zazwyczaj mniej restrykcyjna niż na Windows, ale może blokować połączenia przychodzące dla nieznanych aplikacji.
+
+1.  **Sprawdź status zapory:**
+    *   Przejdź do `Preferencje Systemowe` (System Preferences) > `Ochrona i Prywatność` (Security & Privacy) > `Zapora Sieciowa` (Firewall).
+    *   Upewnij się, że zapora jest włączona.
+
+2.  **Zezwól na połączenia dla aplikacji:**
+    *   Kliknij ikonę kłódki w lewym dolnym rogu i wprowadź hasło administratora, aby odblokować ustawienia.
+    *   Kliknij `Opcje Zapory Sieciowej...` (Firewall Options...).
+    *   Na liście poszukaj `DJ MIDI Capture`. Jeśli go nie ma, kliknij przycisk `+` i dodaj aplikację `DJ MIDI Capture` (znajdującą się zazwyczaj w folderze `Aplikacje`).
+    *   Upewnij się, że obok `DJ MIDI Capture` jest ustawiona opcja `Zezwalaj na połączenia przychodzące` (Allow incoming connections).
+    *   Kliknij `OK` i ponownie ikonę kłódki, aby zablokować ustawienia.
+
+#### Konfiguracja Zapory Sieciowej (Linux)
+
+Na Linuxie istnieje wiele różnych dystrybucji i narzędzi do zarządzania zaporą sieciową. Najpopularniejsze to `ufw` (Uncomplicated Firewall) dla systemów opartych na Debianie/Ubuntu oraz `firewalld` dla systemów opartych na Red Hat/Fedora.
+
+##### Dla systemów używających `ufw` (np. Ubuntu, Debian):
+
+1.  **Sprawdź status `ufw`:**
+    ```bash
+    sudo ufw status
+    ```
+    Jeśli zapora jest nieaktywna, nie ma potrzeby dalszej konfiguracji. Jeśli jest aktywna, przejdź do kroku 2.
+
+2.  **Zezwól na połączenia dla portu aplikacji:**
+    Aplikacja "Remote Drop" używa określonego portu (domyślnie 3000, ale może być dynamiczny). Musisz zezwolić na ruch przychodzący na tym porcie.
+    ```bash
+    sudo ufw allow <numer_portu>/tcp
+    ```
+    Zastąp `<numer_portu>` faktycznym portem używanym przez funkcję "Remote Drop" (możesz go sprawdzić w logach aplikacji lub konfiguracji).
+
+3.  **Przeładuj `ufw`:**
+    ```bash
+    sudo ufw reload
+    ```
+
+##### Dla systemów używających `firewalld` (np. Fedora, CentOS):
+
+1.  **Sprawdź status `firewalld`:**
+    ```bash
+    sudo firewall-cmd --state
+    ```
+    Jeśli zapora jest nieaktywna, nie ma potrzeby dalszej konfiguracji. Jeśli jest aktywna, przejdź do kroku 2.
+
+2.  **Zezwól na połączenia dla portu aplikacji:**
+    ```bash
+    sudo firewall-cmd --zone=public --add-port=<numer_portu>/tcp --permanent
+    ```
+    Zastąp `<numer_portu>` faktycznym portem używanym przez funkcję "Remote Drop".
+
+3.  **Przeładuj `firewalld`:**
+    ```bash
+    sudo firewall-cmd --reload
+    ```
+
+**Ważna uwaga:** Dokładne kroki mogą się różnić w zależności od konkretnej dystrybucji Linuxa i używanego narzędzia do zarządzania zaporą. Zawsze zaleca się sprawdzenie dokumentacji dla swojej dystrybucji.
+
 ### Licencja
 
 Ten projekt jest objęty licencją **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**. Zobacz plik [LICENSE](LICENSE), aby uzyskać szczegółowe informacje.
