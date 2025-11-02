@@ -8,7 +8,7 @@
     "email": "patrykmozeluk@gmail.com"
   },
   "homepage": "https://example.com",
-  "license": "MIT",
+  "license": "CC BY-NC-SA 4.0",
   "scripts": {
     "start": "electron .",
     "postinstall": "electron-builder install-app-deps",
