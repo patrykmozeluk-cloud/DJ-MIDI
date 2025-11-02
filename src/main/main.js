@@ -334,6 +334,7 @@ async function startRemoteServer() {
 
     remoteServer.on("error", (err) => {
       console.error("❌ Server error:", err);
+  dialog.showErrorBox("Remote Server Error", `Server failed to start: ${err.message}`); // Dodana linia
       remoteServer = null;
       remoteURL = null;
       reject(err);
@@ -344,6 +345,8 @@ async function startRemoteServer() {
       const host = getLocalIPv4();
       remoteURL = `http://${host}:${port}/`;
       console.log(`✅ Serwer zdalny uruchomiony na porcie ${port}. URL: ${remoteURL}`);
+      console.log(`[DIAGNOSTIC] Remote Server URL: ${remoteURL}`);
+      console.log(`[DIAGNOSTIC] Local IPv4: ${getLocalIPv4()}`);
       broadcastRemoteInfo(); // Nadaj info do renderera
       resolve();
     });
