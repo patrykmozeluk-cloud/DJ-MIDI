@@ -340,7 +340,7 @@ async function startRemoteServer() {
       reject(err);
     });
 
-    remoteServer.listen(0, "0.0.0.0", () => { // Port 0 = losowy wolny port
+    remoteServer.listen(0, getLocalIPv4(), () => { // Spróbuj nasłuchiwać na konkretnym IP
       const { port } = remoteServer.address();
       const host = getLocalIPv4();
       remoteURL = `http://${host}:${port}/`;
