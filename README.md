@@ -1,4 +1,4 @@
-# DJ MIDI Capture v2.0
+# DJ MIDI Capture v1.5.0
 
 ![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)
 
@@ -58,6 +58,41 @@ The completed application will be in the `dist` folder.
 3.  Play your set. The app will passively listen and fill the rolling buffer.
 4.  After a moment you want to save, press the big **Capture** button or use the `N` key.
 5.  The last X seconds of MIDI data (based on your settings) will be saved to your chosen folder (default is `Documents/DJ Captures`).
+
+### Troubleshooting
+
+#### Firewall Configuration (Windows)
+
+If you are unable to connect to the Remote Drop server from your phone, even if the application is running, your Windows Firewall might be blocking the connection. Follow these steps to configure your firewall:
+
+1.  **Open Windows Defender Firewall with Advanced Security:**
+    *   Press `Win + R`, type `wf.msc`, and press `Enter`.
+    *   Alternatively, search for "Windows Defender Firewall with Advanced Security" in the Start menu.
+
+2.  **Create a New Inbound Rule:**
+    *   In the left pane, click `Inbound Rules`.
+    *   In the right pane, click `New Rule...`.
+
+3.  **Select Rule Type:**
+    *   Choose `Program` and click `Next`.
+
+4.  **Select Program:**
+    *   Select `This program path`.
+    *   Click `Browse...` and navigate to the `DJ MIDI Capture.exe` executable. This is typically found in the application's installation directory (e.g., `C:\Program Files\DJ MIDI Capture\DJ MIDI Capture.exe` or similar, depending on your installation path).
+    *   Click `Next`.
+
+5.  **Allow the Connection:**
+    *   Select `Allow the connection` and click `Next`.
+
+6.  **Select Profiles:**
+    *   Ensure all profiles (`Domain`, `Private`, `Public`) are checked. Click `Next`.
+
+7.  **Name the Rule:**
+    *   Enter a name for the rule, e.g., `DJ MIDI Capture - Allow Connections`.
+    *   You can add a description, e.g., `Allows incoming connections for the DJ MIDI Capture remote server.`.
+    *   Click `Finish`.
+
+After completing these steps, Windows Firewall should allow connections to the DJ MIDI Capture application, enabling your phone to connect to the remote server.
 
 ### License
 
@@ -120,6 +155,41 @@ Gotowa aplikacja znajdzie się w folderze `dist`.
 3.  Graj swojego seta. Aplikacja będzie pasywnie nasłuchiwać i wypełniać bufor kroczący.
 4.  Po chwili, którą chcesz zapisać, naciśnij duży przycisk **Capture** lub użyj klawisza `N`.
 5.  Ostatnie X sekund danych MIDI (zgodnie z Twoimi ustawieniami) zostanie zapisane w wybranym folderze (domyślnie `Dokumenty/DJ Captures`).
+
+### Rozwiązywanie problemów
+
+#### Konfiguracja Zapory Sieciowej (Windows)
+
+Jeśli nie możesz połączyć się z serwerem Remote Drop z telefonu, nawet jeśli aplikacja jest uruchomiona, Twoja Zapora Systemu Windows może blokować połączenie. Wykonaj poniższe kroki, aby skonfigurować zaporę:
+
+1.  **Otwórz Zaporę Windows Defender z zabezpieczeniami zaawansowanymi:**
+    *   Naciśnij `Win + R`, wpisz `wf.msc` i naciśnij `Enter`.
+    *   Alternatywnie, wyszukaj "Zapora Windows Defender z zabezpieczeniami zaawansowanymi" w menu Start.
+
+2.  **Utwórz nową regułę dla ruchu przychodzącego:**
+    *   W lewym panelu kliknij `Reguły przychodzące`.
+    *   W prawym panelu kliknij `Nowa reguła...`.
+
+3.  **Wybierz typ reguły:**
+    *   Wybierz `Program` i kliknij `Dalej`.
+
+4.  **Wybierz program:**
+    *   Wybierz `Ścieżka programu`.
+    *   Kliknij `Przeglądaj...` i znajdź plik wykonywalny `DJ MIDI Capture.exe`. Zazwyczaj znajduje się on w katalogu instalacyjnym aplikacji (np. `C:\Program Files\DJ MIDI Capture\DJ MIDI Capture.exe` lub podobnym, w zależności od miejsca instalacji).
+    *   Kliknij `Dalej`.
+
+5.  **Zezwól na połączenie:**
+    *   Wybierz `Zezwalaj na połączenie` i kliknij `Dalej`.
+
+6.  **Wybierz profile:**
+    *   Upewnij się, że zaznaczone są wszystkie profile (`Domena`, `Prywatny`, `Publiczny`). Kliknij `Dalej`.
+
+7.  **Nadaj nazwę regule:**
+    *   Wpisz nazwę dla reguły, np. `DJ MIDI Capture - Zezwól na połączenia`.
+    *   Możesz dodać opis, np. `Zezwala na połączenia przychodzące dla serwera zdalnego DJ MIDI Capture.`.
+    *   Kliknij `Zakończ`.
+
+Po wykonaniu tych kroków, Zapora Windows Defender powinna zezwolić na połączenia z aplikacją DJ MIDI Capture, umożliwiając Twojemu telefonowi połączenie się z serwerem zdalnym.
 
 ### Licencja
 
