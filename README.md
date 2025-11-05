@@ -233,9 +233,7 @@ Na Linuxie istnieje wiele różnych dystrybucji i narzędzi do zarządzania zapo
 
 Ważna uwaga: Dokładne kroki mogą się różnić w zależności od konkretnej dystrybucji Linuxa i używanego narzędzia do zarządzania zaporą. Zawsze zaleca się sprawdzenie dokumentacji dla swojej dystrybucji.
 
-### Licencja
-
-Ten projekt jest objęty licencją **MIT**
+### Licencja **MIT**
 
 * **Autor:** Patryk Mozeluk
 * **Kontakt:** [patrykmozeluk@gmail.com](mailto:patrykmozeluk@gmail.com)
