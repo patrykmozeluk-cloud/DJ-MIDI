@@ -144,10 +144,10 @@ On Linux, there are many different distributions and firewall management tools. 
 
 Important note: The exact steps may vary depending on your specific Linux distribution and the firewall tool you are using. It is always recommended to check the documentation for your distribution.
 
-### License **MIT**
+### Licencja **MIT**
 
-* **Author:** Patryk Mozeluk
-* **Contact:** [patrykmozeluk@gmail.com](mailto:patrykmozeluk@gmail.com)
+* **Autor:** Patryk Mozeluk
+* **Kontakt:** [patrykmozeluk@gmail.com](mailto:patrykmozeluk@gmail.com)
 
 ---
 
@@ -200,7 +200,7 @@ Jeśli wolisz samodzielnie zbudować aplikację, postępuj zgodnie z poniższymi
     * **Dla macOS:** `npm run build:mac` (Uwaga: Wymaga komputera z systemem macOS)
     * **Dla Linux:** `npm run build:linux`
 
-Gotowa aplikacja znajdzie się w folderze `dist`.
+The completed application will be in the `dist` folder.
 
 ### Jak Używać
 
@@ -230,66 +230,66 @@ Jeśli nie możesz połączyć się z serwerem Remote Drop z telefonu, nawet je�
     * Kliknij `Dalej`.
 5.  **Zezwól na połączenie:**
     * Wybierz `Zezwalaj na połączenie` i kliknij `Dalej`.
-6.  **Wybierz profile:**
-    * Upewnij się, że zaznaczone są wszystkie profile (Domena, `Prywatny`, `Publiczny`). Kliknij `Dalej`.
-7.  **Nadaj nazwę regule:**
-    * Wpisz nazwę dla reguły, np. `DJ MIDI Capture - Zezwól na połączenia`.
-    * Możesz dodać opis, np. `Zezwala na połączenia przychodzące dla serwera zdalnego DJ MIDI Capture..`
-    * Kliknij `Zakończ`.
+6.  **Select Profiles:**
+    * Ensure all profiles (Domain, `Private`, `Public`) are checked. Click `Next`.
+7.  **Name the Rule:**
+    * Enter a name for the rule, e.g., `DJ MIDI Capture - Allow Connections`.
+    * You can add a description, e.g., `Allows incoming connections for the DJ MIDI Capture remote server..`
+    * Click `Finish`.
 
-Po wykonaniu tych kroków, Zapora Windows Defender powinna zezwolić na połączenia z aplikacją DJ MIDI Capture, umożliwiając Twojemu telefonowi połączenie się z serwerem zdalnym.
+After completing these steps, Windows Firewall should allow connections to the DJ MIDI Capture application, enabling your phone to connect to the remote server.
 
-**Konfiguracja Zapory Sieciowej (macOS)**
+**Firewall Configuration (macOS)**
 
-Na macOS domyślna zapora sieciowa (Firewall) jest zazwyczaj mniej restrykcyjna niż na Windows, ale może blokować połączenia przychodzące dla nieznanych aplikacji.
+On macOS, the default Firewall is generally less restrictive than on Windows, but it might block incoming connections for unknown applications.
 
-1.  **Sprawdź status zapory:**
-    * Przejdź do `Preferencje Systemowe` (System Preferences) > `Ochrona i Prywatność` (Security & Privacy) > `Zapora Sieciowa` (Firewall).
-    * Upewnij się, że zapora jest włączona.
-2.  **Zezwól na połączenia dla aplikacji:**
-    * Kliknij ikonę kłódki w lewym dolnym rogu i wprowadź hasło administratora, aby odblokować ustawienia.
-    * Kliknij `Opcje Zapory Sieciowej...` (Firewall Options...).
-    * Na liście poszukaj `DJ MIDI Capture`. Jeśli go nie ma, kliknij przycisk `+` i dodaj aplikację `DJ MIDI Capture` (znajdującą się zazwyczaj w folderze `Aplikacje`).
-    * Upewnij się, że obok `DJ MIDI Capture` jest ustawiona opcja `Zezwalaj na połączenia przychodzące` (Allow incoming connections).
-    * Kliknij `OK` i ponownie ikonę kłódki, aby zablokować ustawienia.
+1.  **Check Firewall Status:**
+    * Go to `System Preferences` > `Security & Privacy` > `Firewall`.
+    * Ensure the Firewall is turned on.
+2.  **Allow connections for the app:**
+    * Click the lock icon in the bottom-left corner and enter your administrator password to unlock settings.
+    * Click `Firewall Options...`.
+    * Look for `DJ MIDI Capture` in the list. If it's not there, click the `+` button and add the `DJ MIDI Capture` application (usually found in the `Applications` folder).
+    * Ensure that next to `DJ MIDI Capture`, the option is set to `Allow incoming connections`.
+    * Click `OK` and lock the settings again.
 
-**Konfiguracja Zapory Sieciowej (Linux)**
+**Firewall Configuration (Linux)**
 
-Na Linuxie istnieje wiele różnych dystrybucji i narzędzi do zarządzania zaporą sieciową. Najpopularniejsze to `ufw` (Uncomplicated Firewall) dla systemów opartych na Debianie/Ubuntu oraz `firewalld` dla systemów opartych na Red Hat/Fedora.
+On Linux, there are many different distributions and firewall management tools. The most popular are `ufw` (Uncomplicated Firewall) for Debian/Ubuntu-based systems and `firewalld` for Red Hat/Fedora-based systems.
 
-* **Dla systemów używających `ufw` (np. Ubuntu, Debian):**
-    1.  Sprawdź status `ufw`:
+* **For systems using `ufw` (e.g., Ubuntu, Debian):**
+    1.  Check `ufw` status:
         ```bash
         sudo ufw status
         ```
-    2.  Jeśli zapora jest nieaktywna, nie ma potrzeby dalszej konfiguracji. Jeśli jest aktywna, przejdź do kroku 3.
-    3.  Zezwól na połączenia dla portu aplikacji: Aplikacja "Remote Drop" używa określonego portu (domyślnie 3000, ale może być dynamiczny). Musisz zezwolić na ruch przychodzący na tym porcie.
+    2.  If the firewall is inactive, no further configuration is needed. If it is active, proceed to step 3.
+    3.  Allow connections for the application's port: The "Remote Drop" app uses a specific port (default 3000, but may be dynamic). You must allow incoming traffic on this port.
         ```bash
-        sudo ufw allow <numer_portu>/tcp
+        sudo ufw allow <port_number>/tcp
         ```
-        Zastąp `<numer_portu>` faktycznym portem używanym przez funkcję "Remote Drop".
-    4.  Przeładuj `ufw`:
+        Replace `<port_number>` with the actual port used by the "Remote Drop" feature.
+    4.  Reload `ufw`:
         ```bash
         sudo ufw reload
         ```
 
-* **Dla systemów używających `firewalld` (np. Fedora, CentOS):**
-    1.  Sprawdź status `firewalld`:
+* **For systems using `firewalld` (e.g., Fedora, CentOS):**
+    1.  Check `firewalld` status:
         ```bash
         sudo firewall-cmd --state
         ```
-    2.  Jeśli zapora jest nieaktywna, nie ma potrzeby dalszej konfiguracji. Jeśli jest aktywna, przejdź do kroku 3.
-    3.  Zezwól na połączenia dla portu aplikacji:
+    2.  If the firewall is inactive, no further configuration is needed. If it is active, proceed to step 3.
+    3.  Allow connections for the application's port:
         ```bash
-        sudo firewall-cmd --zone=public --add-port=<numer_portu>/tcp --permanent
+        sudo firewall-cmd --zone=public --add-port=<port_number>/tcp --permanent
         ```
-        Zastąp `<numer_portu>` faktycznym portem używanym przez funkcję "Remote Drop".
-    4.  Przeładuj `firewalld`:
+        Replace `<port_number>` with the actual port used by the "Remote Drop" feature.
+    4.  Reload `firewalld`:
         ```bash
         sudo firewall-cmd --reload
         ```
 
-Ważna uwaga: Dokładne kroki mogą się różnić w zależności od konkretnej dystrybucji Linuxa i używanego narzędzia do zarządzania zaporą. Zawsze zaleca się sprawdzenie dokumentacji dla swojej dystrybucji.
+Important note: The exact steps may vary depending on your specific Linux distribution and the firewall tool you are using. It is always recommended to check the documentation for your distribution.
 
 ### Licencja **MIT**
 
