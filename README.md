@@ -89,9 +89,7 @@ If you are unable to connect to the Remote Drop server from your phone, even if 
 
 After completing these steps, Windows Firewall should allow connections to the DJ MIDI Capture application, enabling your phone to connect to the remote server.
 
-### License
-
-This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)**. See the `LICENSE` file for details.
+### Licence **MIT**
 
 * **Author:** Patryk Mozeluk
 * **Contact:** [patrykmozeluk@gmail.com](mailto:patrykmozeluk@gmail.com)
