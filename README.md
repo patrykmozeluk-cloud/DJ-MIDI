@@ -89,7 +89,59 @@ If you are unable to connect to the Remote Drop server from your phone, even if 
 
 After completing these steps, Windows Firewall should allow connections to the DJ MIDI Capture application, enabling your phone to connect to the remote server.
 
-### Licence **MIT**
+**Firewall Configuration (macOS)**
+
+On macOS, the default Firewall is generally less restrictive than on Windows, but it might block incoming connections for unknown applications.
+
+1.  **Check Firewall Status:**
+    * Go to `System Preferences` > `Security & Privacy` > `Firewall`.
+    * Ensure the Firewall is turned on.
+2.  **Allow connections for the app:**
+    * Click the lock icon in the bottom-left corner and enter your administrator password to unlock settings.
+    * Click `Firewall Options...`.
+    * Look for `DJ MIDI Capture` in the list. If it's not there, click the `+` button and add the `DJ MIDI Capture` application (usually found in the `Applications` folder).
+    * Ensure that next to `DJ MIDI Capture`, the option is set to `Allow incoming connections`.
+    * Click `OK` and lock the settings again.
+
+**Firewall Configuration (Linux)**
+
+On Linux, there are many different distributions and firewall management tools. The most popular are `ufw` (Uncomplicated Firewall) for Debian/Ubuntu-based systems and `firewalld` for Red Hat/Fedora-based systems.
+
+* **For systems using `ufw` (e.g., Ubuntu, Debian):**
+    1.  Check `ufw` status:
+        ```bash
+        sudo ufw status
+        ```
+    2.  If the firewall is inactive, no further configuration is needed. If it is active, proceed to step 3.
+    3.  Allow connections for the application's port: The "Remote Drop" app uses a specific port (default 3000, but may be dynamic). You must allow incoming traffic on this port.
+        ```bash
+        sudo ufw allow <port_number>/tcp
+        ```
+        Replace `<port_number>` with the actual port used by the "Remote Drop" feature.
+    4.  Reload `ufw`:
+        ```bash
+        sudo ufw reload
+        ```
+
+* **For systems using `firewalld` (e.g., Fedora, CentOS):**
+    1.  Check `firewalld` status:
+        ```bash
+        sudo firewall-cmd --state
+        ```
+    2.  If the firewall is inactive, no further configuration is needed. If it is active, proceed to step 3.
+    3.  Allow connections for the application's port:
+        ```bash
+        sudo firewall-cmd --zone=public --add-port=<port_number>/tcp --permanent
+        ```
+        Replace `<port_number>` with the actual port used by the "Remote Drop" feature.
+    4.  Reload `firewalld`:
+        ```bash
+        sudo firewall-cmd --reload
+        ```
+
+Important note: The exact steps may vary depending on your specific Linux distribution and the firewall tool you are using. It is always recommended to check the documentation for your distribution.
+
+### License **MIT**
 
 * **Author:** Patryk Mozeluk
 * **Contact:** [patrykmozeluk@gmail.com](mailto:patrykmozeluk@gmail.com)
