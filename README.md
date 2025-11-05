@@ -144,7 +144,7 @@ On Linux, there are many different distributions and firewall management tools. 
 
 Important note: The exact steps may vary depending on your specific Linux distribution and the firewall tool you are using. It is always recommended to check the documentation for your distribution.
 
-### Licencja **MIT**
+### License **MIT**
 
 * **Autor:** Patryk Mozeluk
 * **Kontakt:** [patrykmozeluk@gmail.com](mailto:patrykmozeluk@gmail.com)
