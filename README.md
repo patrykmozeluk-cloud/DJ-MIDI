@@ -237,7 +237,7 @@ Ważna uwaga: Dokładne kroki mogą się różnić w zależności od konkretnej 
 
 ### Licencja
 
-Ten projekt jest objęty licencją **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**. Zobacz plik `LICENSE`, aby uzyskać szczegółowe informacje.
+Ten projekt jest objęty licencją **MIT**
 
 * **Autor:** Patryk Mozeluk
 * **Kontakt:** [patrykmozeluk@gmail.com](mailto:patrykmozeluk@gmail.com)
