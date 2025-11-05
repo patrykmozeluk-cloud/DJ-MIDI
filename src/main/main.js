@@ -71,6 +71,7 @@ function createWindow() {
     minHeight: 720,
     title: "DJ MIDI Capture",
     icon: path.join(__dirname, "icon.png"),
+    backgroundColor: '#1c1c1c', // Prevents white flash on load
     webPreferences: {
       preload: path.join(__dirname, "..", "preload", "preload.js"),
       contextIsolation: true,
@@ -334,15 +335,15 @@ async function startRemoteServer() {
 
     remoteServer.on("error", (err) => {
       console.error("❌ Server error:", err);
-  dialog.showErrorBox("Remote Server Error", `Server failed to start: ${err.message}`); // Dodana linia
+  dialog.showErrorBox("Remote Server Error", `Server failed to start: ${err.message}\n\nThis might be due to a firewall blocking the connection. Please ensure your firewall allows connections to this application.`);
       remoteServer = null;
       remoteURL = null;
       reject(err);
     });
 
-    remoteServer.listen(0, getLocalIPv4(), () => { // Spróbuj nasłuchiwać na konkretnym IP
+    remoteServer.listen(0, '0.0.0.0', () => { // Nasłuchuj na wszystkich interfejsach sieciowych
       const { port } = remoteServer.address();
-      const host = getLocalIPv4();
+      const host = getLocalIPv4(); // Nadal używamy getLocalIPv4 do wyświetlenia poprawnego adresu dla użytkownika
       remoteURL = `http://${host}:${port}/`;
       console.log(`✅ Serwer zdalny uruchomiony na porcie ${port}. URL: ${remoteURL}`);
       console.log(`[DIAGNOSTIC] Remote Server URL: ${remoteURL}`);

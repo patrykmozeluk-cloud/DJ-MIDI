@@ -5,7 +5,7 @@
 
     // ---- v1.4 State & Features ----
     const S = {
-      bpm: 120,
+      manualBPM: 120,
       midiAccess: null,
       events: [],
       captureCount: 0,
@@ -49,6 +49,14 @@
       triggerNote: 60,
       triggerChannel: 0,
 
+      // v1.6 Tempo Control
+      autoBPM: null,
+      isAutoBPMActive: false,
+      autoBPMTimeout: null,
+      clockPulseTimestamps: [],
+      manualBPM: 120, // Keep track of manual BPM separately
+      enableAutoBPM: true, // A setting to disable this feature
+
                 // debounce
                           reinitTimer: null,
           theme: 'default-dark',
@@ -78,6 +86,7 @@
       bpmPresets: document.getElementById("bpm-presets"),
       forwardMode: document.getElementById("forward-mode"),
       ignoreRT: document.getElementById("ignore-rt"),
+      enableAutoBPM: document.getElementById("enable-auto-bpm"),
 
       btnCapture: document.getElementById("btn-capture"),
       btnClear: document.getElementById("btn-clear"),
@@ -214,6 +223,21 @@
       return `MIDI Device #${n}`;
     }
 
+    // ---- v1.6 Tempo Control ----
+    function updateTempoUI() {
+      if (S.isAutoBPMActive && S.autoBPM) {
+        el.bpmInput.value = Math.round(S.autoBPM);
+        el.bpmInput.disabled = true;
+        el.bpmPresets.disabled = true;
+        el.bpmInput.classList.add('auto');
+      } else {
+        el.bpmInput.disabled = false;
+        el.bpmPresets.disabled = false;
+        el.bpmInput.classList.remove('auto');
+        el.bpmInput.value = S.manualBPM;
+      }
+    }
+
     // ---- v1.4 Settings with Validation ----
     function getSettings() {
       const rawPreRoll = parseInt(el.preRoll.value || "0", 10);
@@ -223,7 +247,7 @@
       // Validation and limits
       S.preRollMs = Math.max(0, Math.min(rawPreRoll, 10000)); // Max 10 seconds
       S.maxCaptureSeconds = Math.max(1, Math.min(rawMaxCap, 300)); // Max 5 minutes
-      S.bpm = Math.max(40, Math.min(rawBPM, 300)); // Clamp BPM between 40 and 300
+      S.manualBPM = Math.max(40, Math.min(rawBPM, 300)); // Clamp BPM between 40 and 300
 
       // Notify user if value was corrected
       if (rawPreRoll > 10000) {
@@ -235,9 +259,13 @@
         showToast("Max capture limited to 300s", "warn", 2000);
       }
       if (rawBPM < 40 || rawBPM > 300) {
-        el.bpmInput.value = S.bpm;
+        el.bpmInput.value = S.manualBPM;
         showToast(`BPM limited to 40-300 range`, "warn", 2000);
       }
+      
+      // This is the final BPM used for saving, respecting the auto/manual mode
+      S.bpm = S.isAutoBPMActive && S.autoBPM ? S.autoBPM : S.manualBPM;
+      updateTempoUI();
     }
 
     // ---- MIDI Initialization ----
@@ -370,6 +398,65 @@
         setTriggerStatus("Ready", "ready");
       }
       // ---- End Guard ----
+
+      // ---- v1.6 Auto BPM Detection ----
+      if (S.enableAutoBPM) {
+        // MIDI Clock message
+        if (status === 0xF8) {
+          const now = performance.now();
+          if (S.lastClockTime > 0) {
+            const diff = now - S.lastClockTime;
+            S.clockPulseTimestamps.push(diff);
+            if (S.clockPulseTimestamps.length > 24) { // Keep a rolling window of 24 pulses (1 beat)
+              S.clockPulseTimestamps.shift();
+            }
+            
+            // Calculate average time between pulses
+            const avgDiff = S.clockPulseTimestamps.reduce((a, b) => a + b, 0) / S.clockPulseTimestamps.length;
+            
+            if (avgDiff > 0) {
+              // 24 pulses per quarter note
+              const calculatedBPM = 60000 / (avgDiff * 24);
+              // Smooth the BPM value
+              S.autoBPM = S.autoBPM ? (S.autoBPM * 0.95) + (calculatedBPM * 0.05) : calculatedBPM;
+            }
+          }
+          S.lastClockTime = now;
+          S.isAutoBPMActive = true;
+
+          // Reset the timeout to switch back to manual
+          clearTimeout(S.autoBPMTimeout);
+          S.autoBPMTimeout = setTimeout(() => {
+            S.isAutoBPMActive = false;
+            S.autoBPM = null;
+            S.clockPulseTimestamps = [];
+            S.lastClockTime = 0;
+            updateTempoUI();
+            showToast("MIDI clock stopped. Switched to manual BPM.", "ok", 1500);
+          }, 2000); // 2-second timeout
+
+          updateTempoUI();
+        }
+        
+        // MIDI Start message
+        if (status === 0xFA) {
+          S.isAutoBPMActive = true;
+          S.lastClockTime = 0;
+          S.clockPulseTimestamps = [];
+          showToast("MIDI clock detected. Switched to auto BPM.", "ok", 1500);
+        }
+
+        // MIDI Stop message
+        if (status === 0xFC) {
+          S.isAutoBPMActive = false;
+          S.autoBPM = null;
+          S.clockPulseTimestamps = [];
+          S.lastClockTime = 0;
+          clearTimeout(S.autoBPMTimeout);
+          updateTempoUI();
+          showToast("MIDI clock stopped. Switched to manual BPM.", "ok", 1500);
+        }
+      }
 
       if (S.ignoreRealtime && status >= 0xF8) return;
 
@@ -611,6 +698,8 @@
         showToast("Save aborted: No events to save", "err", 2000);
         return;
       }
+
+      getSettings(); // Ensure S.bpm is current before saving
 
       const lenSec = Math.max(1, Math.round((events[events.length - 1].timestamp - events[0].timestamp) / 1000));
       const session = (el.sessionName.value || "Session").trim();
@@ -890,6 +979,21 @@
         });
       }
 
+      // v1.6 Auto BPM checkbox
+      if (el.enableAutoBPM) {
+        el.enableAutoBPM.checked = S.enableAutoBPM;
+        el.enableAutoBPM.addEventListener("change", () => {
+          S.enableAutoBPM = el.enableAutoBPM.checked;
+          if (!S.enableAutoBPM) {
+            // If we disable auto mode, immediately switch to manual
+            S.isAutoBPMActive = false;
+            clearTimeout(S.autoBPMTimeout);
+            updateTempoUI();
+          }
+          showToast(`Auto BPM detection ${S.enableAutoBPM ? 'enabled' : 'disabled'}`, 'ok', 1000);
+        });
+      }
+
       // Remote Drop button
       el.btnRemoteDrop.addEventListener("click", async () => {
         try {
@@ -1066,7 +1170,7 @@
       }
       el.preRoll.value = S.preRollMs;
       el.maxCap.value = S.maxCaptureSeconds;
-      el.bpmInput.value = S.bpm;
+      el.bpmInput.value = S.manualBPM;
 
       let version;
       try {

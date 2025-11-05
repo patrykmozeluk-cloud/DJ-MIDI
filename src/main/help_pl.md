@@ -8,37 +8,42 @@ Używa "bufora kroczącego" (rolling buffer), aby zapewnić, że nigdy nie przeg
 
 ## 2. Główne Elementy Interfejsu
 
-- **Kafelki Statusu**: Szybki podgląd statusu połączenia MIDI, liczby zdarzeń w buforze, użycia bufora i całkowitej liczby zapisów w tej sesji.
+* **Kafelki Statusu**: Szybki podgląd statusu połączenia MIDI, liczby zdarzeń w buforze, użycia bufora i całkowitej liczby zapisów w tej sesji.
 
-- **Aktywne Wejścia (Active Inputs)**: Lista wszystkich wykrytych wejściowych urządzeń MIDI.
-  - ✅ Zielony ptaszek oznacza aktywne urządzenie, które wysyła dane.
-  - ⚫ Czarna kropka oznacza podłączone, ale obecnie nieaktywne urządzenie.
-  - **Show Virtual**: Użyj tego przełącznika, aby pokazać lub ukryć wirtualne porty MIDI (np. "Microsoft GS Wavetable Synth").
+* **Aktywne Wejścia (Active Inputs)**: Lista wszystkich wykrytych wejściowych urządzeń MIDI.
+    * ✅ Zielony ptaszek oznacza aktywne urządzenie, które wysyła dane.
+    * ⚫ Czarna kropka oznacza podłączone, ale obecnie nieaktywne urządzenie.
+    * **Show Virtual**: Użyj tego przełącznika, aby pokazać lub ukryć wirtualne porty MIDI (np. "Microsoft GS Wavetable Synth").
 
-- **Kontrolki (Controls)**:
-  - **Session / Track/Tag**: Te pola służą do automatycznego nazywania zapisanych plików `.mid`.
-  - **Pre-roll (ms)**: Ile czasu *przed* wyzwoleniem zapisu ma być dołączone do nagrania (w milisekundach).
-  - **Max capture (s)**: Maksymalna długość nagrania (w sekundach). Definiuje to rozmiar Twojego bufora kroczącego.
+* **Kontrolki (Controls)**:
+    * **Session / Track/Tag**: Te pola służą do automatycznego nazywania zapisanych plików `.mid`.
+    * **Pre-roll (ms)**: Ile czasu *przed* wyzwoleniem zapisu ma być dołączone do nagrania (w milisekundach).
+    * **Max capture (s)**: Maksymalna długość nagrania (w sekundach). Definiuje to rozmiar Twojego bufora kroczącego.
 
-- **Monitor na Żywo (Live MIDI Monitor)**:
-  - **Last MIDI Event**: Wyświetla surowe dane ostatniego otrzymanego komunikatu MIDI.
-  - **Trigger Status**: Pokazuje aktualny stan wyzwalacza zapisu (np. Gotowy, Zapisano, Burza MIDI).
-  - **Activity LED**: Miga na zielono za każdym razem, gdy odbierany jest komunikat MIDI.
+* **Monitor na Żywo (Live MIDI Monitor)**:
+    * **Last MIDI Event**: Wyświetla surowe dane ostatniego otrzymanego komunikatu MIDI.
+    * **Trigger Status**: Pokazuje aktualny stan wyzwalacza zapisu (np. Gotowy, Zapisano, Burza MIDI).
+    * **Activity LED**: Miga na zielono za każdym razem, gdy odbierany jest komunikat MIDI.
 
-- **Remote Drop**:
-  - Pokazuje adres URL dla funkcji zdalnego wyzwalania. Otwórz ten adres na swoim telefonie (w tej samej sieci Wi-Fi), aby uzyskać przycisk "DROP".
-  - Naciśnięcie tego przycisku na telefonie wyzwoli zapis w aplikacji na komputerze.
+* **Remote Drop**:
+    * Pokazuje adres URL dla funkcji zdalnego wyzwalania. Otwórz ten adres na swoim telefonie (w tej samej sieci Wi-Fi), aby uzyskać przycisk "DROP".
+    * Naciśnięcie tego przycisku na telefonie wyzwoli zapis w aplikacji na komputerze.
 
 ## 3. Kluczowe Funkcje
 
-- **Rolling Capture (tryb domyślny)**: Aplikacja cały czas nasłuchuje i nagrywa MIDI do bufora. Kiedy naciskasz przycisk `Capture` lub używasz nuty-wyzwalacza, zapisuje ostatnie `X` sekund aktywności MIDI, gdzie `X` to Twoje ustawienie `Max capture`.
+* **Rolling Capture (tryb domyślny)**: Aplikacja cały czas nasłuchuje i nagrywa MIDI do bufora. Kiedy naciskasz przycisk `Capture` lub używasz nuty-wyzwalacza, zapisuje ostatnie `X` sekund aktywności MIDI, gdzie `X` to Twoje ustawienie `Max capture`.
 
-- **Forward Capture (checkbox)**: Jeśli zaznaczysz pole "Forward mode", zachowanie się zmienia. Teraz naciśnięcie `Capture` lub użycie wyzwalacza *rozpoczyna* nowe nagranie, które potrwa `X` sekund. Działa to jak tradycyjny przycisk "record".
+* **Forward Capture (checkbox)**: Jeśli zaznaczysz pole "Forward mode", zachowanie się zmienia. Teraz naciśnięcie `Capture` lub użycie wyzwalacza *rozpoczyna* nowe nagranie, które potrwa `X` sekund. Działa to jak tradycyjny przycisk "record".
 
-- **Nuta-Wyzwalacz (Trigger Note)**: Domyślnie, komunikat Note On dla **C4 (nuta MIDI 60)** na dowolnym kanale wyzwoli zapis, tak samo jak naciśnięcie przycisku `Capture`.
+* **Hybrydowa Kontrola Tempa:** Aplikacja posiada zaawansowany system kontroli tempa, który łączy tryb automatyczny i ręczny.
+    *   **Tryb Automatyczny:** Gdy z podłączonego urządzenia wykryty zostanie sygnał MIDI clock, aplikacja automatycznie obliczy i wyświetli BPM. Tryb ten ma priorytet i nadpisze wszelkie ustawienia ręczne. Pole do wprowadzania BPM zostanie zablokowane i podświetlone, aby zasygnalizować tryb automatyczny.
+    *   **Tryb Ręczny:** Jeśli sygnał MIDI clock nie jest obecny, lub jeśli funkcja zostanie wyłączona, możesz ręcznie ustawić BPM za pomocą pola tekstowego lub gotowych presetów. Służy to jako niezawodny tryb zapasowy.
+    *   **Płynne Przełączanie:** System automatycznie wraca do trybu ręcznego kilka sekund po zaniku sygnału MIDI clock.
+
+* **Nuta-Wyzwalacz (Trigger Note)**: Domyślnie, komunikat Note On dla **C4 (nuta MIDI 60)** na dowolnym kanale wyzwoli zapis, tak samo jak naciśnięcie przycisku `Capture`.
 
 ## 4. Skróty Klawiszowe
 
-- **N**: Wyzwala zapis (tak samo jak przycisk `Capture`).
-- **C**: Czyści bufor zdarzeń MIDI.
-- **T**: Symuluje testowe zdarzenie MIDI w celu wyzwolenia zapisu.
+* **N**: Wyzwala zapis (tak samo jak przycisk `Capture`).
+* **C**: Czyści bufor zdarzeń MIDI.
+* **T**: Symuluje testowe zdarzenie MIDI w celu wyzwolenia zapisu.
